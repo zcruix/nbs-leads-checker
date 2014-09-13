@@ -8,4 +8,5 @@
                  [org.clojure/data.xml "0.0.8"]
                  [org.clojure/data.zip "0.1.1"]
                  [table "0.4.0"]]
-  :main nbs-leads-checker.core)
+  :main nbs-leads-checker.core
+  )
