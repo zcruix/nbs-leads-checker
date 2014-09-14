@@ -7,6 +7,7 @@
                  [clj-http "0.9.2"]
                  [org.clojure/data.xml "0.0.8"]
                  [org.clojure/data.zip "0.1.1"]
-                 [table "0.4.0"]]
+                 [table "0.4.0"]
+                 [com.github.kyleburton/clj-xpath "1.4.3"]]
   :main nbs-leads-checker.core
   )

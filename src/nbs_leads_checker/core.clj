@@ -4,6 +4,7 @@
 )
 
 (defn -main[]
-  (retrieve/lead-info)
+  (retrieve/notes-info)
   (listall/first-leads)
+  (println "done!")
  )
