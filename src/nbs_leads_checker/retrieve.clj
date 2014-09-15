@@ -1,13 +1,13 @@
 (ns nbs-leads-checker.retrieve
   (:require [table.core :as table]
             [clojure.pprint :as pp])
-  (:use [nbs-leads-checker.connect :as connect]
+  (:use [nbs-leads-checker.connect :as c]
         [clj-xpath.core]))
 
 
 (defn print-notes[url & params]
   (def notes
-      (apply connect/download-response-body url params))
+      (apply c/download-response-body url params))
 
   (def notes-xml
      (memoize (fn [] notes)))
@@ -22,17 +22,17 @@
     (fn [item]
        {
         :ID (clean-newline ($x:text? "." item))
-        :STATUS  (connect/clean-newline ($x:text? "../STATUS" item))
+        :STATUS  (c/clean-newline ($x:text? "../STATUS" item))
        })
      ($x "/LEADS/NODE/ID" (notes-xml-doc))))
 
   (def details
    (map
     (fn [item]
-      {:NOTEFORID (connect/clean-newline ($x:text? "../NOTEFORID" item))
-       :NOTE (connect/clean-newline ($x:text? "." item))
-       :USERSUBMIT (connect/clean-newline ($x:text? "../USERSUBMIT" item))
-       :DATE  (connect/clean-newline ($x:text? "../DATE" item))
+      {:NOTEFORID (c/clean-newline ($x:text? "../NOTEFORID" item))
+       :NOTE (c/clean-newline ($x:text? "." item))
+       :USERSUBMIT (c/clean-newline ($x:text? "../USERSUBMIT" item))
+       :DATE  (c/clean-newline ($x:text? "../DATE" item))
        })
      ($x "/LEADS/NODE/NOTE" (notes-xml-doc))))
 
@@ -44,6 +44,6 @@
   (def old-lead-id {:id "12894"})
   (def new-lead-id {:id "1000425"})
 
-  (print-notes connect/old-nbs-url connect/token-for-merchant-lane command-retrieve old-lead-id)
-  (print-notes connect/new-nbs-url connect/token-for-merchant-lane command-retrieve new-lead-id))
+  (print-notes c/old-nbs-url c/token-for-merchant-lane command-retrieve old-lead-id)
+  (print-notes c/new-nbs-url c/token-for-merchant-lane command-retrieve new-lead-id))
 
