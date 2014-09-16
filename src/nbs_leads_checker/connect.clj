@@ -5,6 +5,7 @@
             [clojure.data.zip.xml :as zip-xml]
             [clojure.string :as string]
             )
+    (:use [clj-xpath.core])
 )
 
 (def old-nbs-url "https://www.nationalbankservices.com/api/")
@@ -31,3 +32,14 @@
 
 (defn asort [amap order]
  (conj {} (select-keys amap order)))
+
+(defn parse [url params]
+  (def items
+      (apply download-response-body url params))
+
+  (def items-xml
+     (memoize (fn [] items)))
+
+  (def items-xml-doc (memoize (fn [] (xml->doc (items-xml)))))
+
+  (items-xml-doc))

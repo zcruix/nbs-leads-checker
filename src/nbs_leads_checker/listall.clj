@@ -5,15 +5,6 @@
         [clj-xpath.core]))
 
 (defn print-leads[url & params]
-  (def leads
-      (apply c/download-response-body url params))
-
-  (def leads-xml
-     (memoize (fn [] leads)))
-
-  (def leads-xml-doc
-     (memoize (fn [] (xml->doc (leads-xml)))))
-
   (apply println "The leads retrieved for" params "follows:")
 
   (def lead-items
@@ -29,7 +20,8 @@
                 :STATUS (c/clean-newline ($x:text? "../STATUS" item))
                 :CREATED (c/clean-newline ($x:text? "../CREATED" item))}
                [:ID :FIRSTNAME :LASTNAME :BUSINESS_NAME :CITY :STATE :ZIP :STATUS :CREATED]))
-    ($x "/LEADS/NODE/ID" (leads-xml-doc))))
+    ($x "/LEADS/NODE/ID" (c/parse url params))))
+
   (table/table (take 5 lead-items) :style :github-markdown))
 
 (defn leads-info[]

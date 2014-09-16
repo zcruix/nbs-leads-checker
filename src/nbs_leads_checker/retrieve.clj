@@ -6,15 +6,6 @@
 
 
 (defn print-notes[url & params]
-  (def notes
-      (apply c/download-response-body url params))
-
-  (def notes-xml
-     (memoize (fn [] notes)))
-
-  (def notes-xml-doc
-     (memoize (fn [] (xml->doc (notes-xml)))))
-
   (apply println "The notes retrieved for" params "follows:")
 
   (def header
@@ -24,7 +15,7 @@
         :ID (clean-newline ($x:text? "." item))
         :STATUS  (c/clean-newline ($x:text? "../STATUS" item))
        })
-     ($x "/LEADS/NODE/ID" (notes-xml-doc))))
+     ($x "/LEADS/NODE/ID" (c/parse url params))))
 
   (def details
    (map
@@ -34,7 +25,7 @@
        :USERSUBMIT (c/clean-newline ($x:text? "../USERSUBMIT" item))
        :DATE  (c/clean-newline ($x:text? "../DATE" item))
        })
-     ($x "/LEADS/NODE/NOTE" (notes-xml-doc))))
+     ($x "/LEADS/NODE/NOTE" (c/parse url params))))
 
   (table/table header :style :github-markdown)
   (table/table details :style :github-markdown))

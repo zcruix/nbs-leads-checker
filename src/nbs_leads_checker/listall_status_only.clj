@@ -5,15 +5,6 @@
         [clj-xpath.core]))
 
 (defn print-all-statuses[url & params]
-  (def statuses
-      (apply c/download-response-body url params))
-
-  (def statuses-xml
-     (memoize (fn [] statuses)))
-
-  (def statuses-xml-doc
-     (memoize (fn [] (xml->doc (statuses-xml)))))
-
   (apply println "The leads retrieved for" params "follows:")
 
   (def status-item
@@ -23,7 +14,7 @@
         :ID (clean-newline ($x:text? "." item))
         :STATUS (c/clean-newline ($x:text? "../STATUS" item))
       })
-     ($x "/LEADS/NODE/ID" (statuses-xml-doc))))
+     ($x "/LEADS/NODE/ID" (c/parse url params))))
 
   (table/table (take 10 status-item) :style :github-markdown))
 
