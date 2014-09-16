@@ -1,6 +1,5 @@
 (ns nbs-leads-checker.retrieve
-  (:require [table.core :as table]
-            [clojure.pprint :as pp])
+  (:require [table.core :as table])
   (:use [nbs-leads-checker.connect :as c]
         [clj-xpath.core]))
 
